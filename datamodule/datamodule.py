@@ -26,17 +26,24 @@ def preprocessing_dataset(dataset, dataset_name):
         return preprocessing_BoolQA(dataset)
     elif dataset_name == "CB":
         return preprocessing_CB(dataset)
-    elif datasest_name == "SC":
-        return preprocessing_SC(datasest)
+    elif dataset_name == "SC":
+        return preprocessing_SC(dataset)
 
 
 def preprare_dataset(path):
     df = pd.read_csv(path)
-    df = df.sample(2200, random_state=42)
+    if len(df) >= 2200:
+        df = df.sample(2200, random_state=42)
 
-    train_df = df[:2000]
-    val_df = df[2000:2100]
-    test_df = df[2100:2200]
+        train_df = df[:2000]
+        val_df = df[2000:2100]
+        test_df = df[2100:2200]
+    else:
+        df = df.sample(1200, random_state=42)
+
+        train_df = df[:1000]
+        val_df = df[1000:1100]
+        test_df = df[1100:1200]
     
     train_dataset = Dataset.from_pandas(train_df)
     val_dataset = Dataset.from_pandas(val_df)
@@ -47,7 +54,7 @@ def preprare_dataset(path):
         train_dataset = preprocessing_dataset(train_dataset,dataset_name)
         val_dataset = preprocessing_dataset(val_dataset,dataset_name)
         test_dataset = preprocessing_dataset(test_dataset,dataset_name)
-    elif "CB" in paht:
+    elif "CB" in path:
         dataset_name = "CB"
         train_dataset = preprocessing_dataset(train_dataset,dataset_name)
         val_dataset = preprocessing_dataset(val_dataset,dataset_name)

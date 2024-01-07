@@ -12,8 +12,8 @@ sentencepiece==0.1.96
 protobuf==3.20.3
 ninja==1.11.1
 accelerate==0.20.3
-vllm
-omegaconfig
+bitsandbytes
 peft
 scipy
 flash-attn --no-build-isolation
+vllm
