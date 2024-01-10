@@ -26,7 +26,8 @@ class TaskVector():
                     for key in pretrained_state_dict:
                         if pretrained_state_dict[key].dtype in [torch.int64, torch.uint8]:
                             continue
-                        self.vector[key] = (finetuned_state_dict[key] - pretrained_state_dict[key]) * 0.5   # co: 0.5
+                        #scaling coefficient
+                        self.vector[key] = (finetuned_state_dict[key] - pretrained_state_dict[key]) * 0.3
             else:
                 assert pretrained_checkpoint is not None and finetuned_checkpoint is not None
                 with torch.no_grad():
@@ -81,13 +82,16 @@ class TaskVector():
         if not self.lora:
             assert ValueError("TaskVector type is not LoRA")
         tokenizer = AutoTokenizer.from_pretrained(pretrained_checkpoint)
+        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
         model = AutoModelForCausalLM.from_pretrained(pretrained_checkpoint, torch_dtype=torch.float16)
+        model.resize_token_embeddings(len(tokenizer))
         pretrained_model = PeftModel.from_pretrained(
             model,
             pretrained_checkpoint,
             subfolder="loftq_init",
-            is_trainable=False,
+            is_trainable=True,
         )
+
         model_state_dict = pretrained_model.state_dict()  
 
         for name, value in self.vector.items():

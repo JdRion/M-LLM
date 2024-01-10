@@ -1,0 +1,30 @@
+path:
+    first_path: /home/elicer/M-LLM/data/BoolQA.csv
+    second_path : /home/elicer/M-LLM/data/NLI_MNLI.csv
+    third_path : /home/elicer/M-LLM/data/sc_amazon.csv
+    
+model:
+    model_name: LoftQ/Mistral-7B-v0.1-4bit-64rank
+    saved_name: base
+
+train:
+    batch_size: 1
+    gradient_accumulation: 4
+    epoch: 1
+    logging_step: 10
+    
+optimizer:
+    learning_rate: 1e-5
+    optimizer_name: sgd
+    scheduler_name: cosine
+
+wandb:
+    wandb_project: M_LLM
+
+huggingface: [
+    JD97/BoolQA,
+    JD97/NLI_MNLI,
+    JD97/SC_Amazon
+    ]
+
+
